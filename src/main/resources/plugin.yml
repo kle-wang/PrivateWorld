@@ -1,0 +1,7 @@
+name: PrivateWorld
+version: '${project.version}'
+main: cn.ikaile.PrivateWorld
+commands:
+  pworld:
+    aliases: pw
+    usage: pworld
