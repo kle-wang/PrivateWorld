@@ -3,6 +3,7 @@ package cn.ikaile;/*
     @2022/2/24
 */
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ public class Command implements CommandExecutor {
             switch (args[0]){
                 case "add":
                 if(args.length<2){
-                    return true;
+                    return sendHelp(sender);
                 }
                     if(playerName.hasPermission("pw.has."+playerName.getName())){
                         if(PrivateWorld.utils.addWorldPlayer(playerName.getName(),args[1])){
@@ -53,21 +54,37 @@ public class Command implements CommandExecutor {
                     }
                     return true;
                 default:
-                    if(PrivateWorld.utils.backHome(playerName.getName(),args[0])){
-                        return true;
-                    } else {
-                        if(PrivateWorld.utils.backHome(playerName,args[0])){
+                    if(PrivateWorld.utils.isWorld(args[0])){
+                        if(PrivateWorld.utils.backHome(playerName.getName(),args[0])){
                             return true;
-                        }else{
-                            playerName.sendMessage("你没有这个世界的权限哦。。。");
-                            return true;
+                        } else {
+                            if(PrivateWorld.utils.backHome(playerName,args[0])){
+                                return true;
+                            }else if(sender.isOp()){
+                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"mv tp "+sender.getName()+" "+args[0]);
+                                    return true;
+                            }else{
+                                playerName.sendMessage("你没有这个世界的权限哦。。。");
+                                return true;
+                            }
                         }
-
                     }
+
 
 
             }
         }
+        return sendHelp(sender);
+    }
+
+    private boolean sendHelp(CommandSender sender) {
+        sender.sendMessage("——————小世界帮助中心——————\n");
+        sender.sendMessage("pw add id 给予玩家你的小世界权限\n");
+        sender.sendMessage("pw del id 删除玩家你的小世界权限\n");
+        sender.sendMessage("pw me 观看自己小世界的信息\n");
+        sender.sendMessage("pw 小世界名字 回到自己有权限的小世界\n");
+        sender.sendMessage("例如：pw H_kaile 请区分大小写\n");
+        sender.sendMessage("——————小世界帮助中心——————");
         return true;
     }
 }

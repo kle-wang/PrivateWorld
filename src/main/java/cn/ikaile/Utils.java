@@ -30,14 +30,18 @@ public class Utils {
     }
     //获取世界玩家
     public String getWorldPlayer(String p){
-        return (String) dataConfig.get(p+".player");
+        return (String) dataConfig.get("World."+p+".player");
+    }
+    //获取是否存在指定小世界
+    public boolean isWorld(String p){
+        return dataConfig.getStringList("Worlds").contains(p);
     }
     //添加世界玩家
     public Boolean addWorldPlayer(String p, String addP){
         if(getWorldPlayer(p).contains(addP)){
             return false;
         }
-        dataConfig.set(p+".player",getWorldPlayer(p)+addP+",");
+        dataConfig.set("World."+p+".player",getWorldPlayer(p)+addP+",");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"manuaddp "+addP+" Build."+p);
         try {
             dataConfig.save(dataConfigFile);
@@ -50,7 +54,7 @@ public class Utils {
     public Boolean delWorldPlayer(String p,String delP) {
         String name = getWorldPlayer(p);
         name = name.replace(delP+",","");
-        dataConfig.set(p+".player",name);
+        dataConfig.set("World."+p+".player",name);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"manudelp "+delP+" Build."+p);
         try {
             dataConfig.save(dataConfigFile);
